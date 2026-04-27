@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>伺服电缆选型 - 后台管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: #0a0e1a;
+            color: #e0e6ed;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+        h1 { font-size: 1.8rem; color: #00d4ff; }
+        .subtitle { color: #6b7b9c; font-size: 0.85rem; }
+        .logout-btn {
+            padding: 6px 14px;
+            background: rgba(255,107,107,0.1);
+            border: 1px solid rgba(255,107,107,0.3);
+            border-radius: 6px;
+            color: #ff6b6b;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .logout-btn:hover { background: rgba(255,107,107,0.2); }
+        
+        .card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .card-title { font-size: 1.1rem; color: #00d4ff; margin-bottom: 16px; }
+        
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .setting-row:last-child { border-bottom: none; }
+        .setting-label { color: #8b9dc3; }
+        .setting-value { color: #e0e6ed; font-weight: 500; }
+        
+        .switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 26px;
+            transition: 0.3s;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: #6b7b9c;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        input:checked + .slider { background: #00d4ff; }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+            background: #fff;
+        }
+        
+        .input-group { margin-bottom: 16px; }
+        .input-group label { display: block; color: #8b9dc3; font-size: 0.85rem; margin-bottom: 6px; }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+        .input-group textarea { min-height: 80px; resize: vertical; font-family: inherit; }
+        .input-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; }
+        
+        .btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b61ff 100%);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(0,212,255,0.3);
+            color: #00d4ff;
+        }
+        .btn-danger {
+            background: rgba(255,107,107,0.2);
+            border: 1px solid rgba(255,107,107,0.3);
+            color: #ff6b6b;
+        }
+        .btn-block { width: 100%; margin-top: 10px; }
+        
+        .code-list { margin-top: 12px; }
+        .code-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        .code-text { font-family: monospace; color: #00d4ff; letter-spacing: 1px; }
+        
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .alert-success { background: rgba(81,207,102,0.1); border: 1px solid rgba(81,207,102,0.3); color: #51cf66; }
+        .alert-warning { background: rgba(255,217,61,0.1); border: 1px solid rgba(255,217,61,0.3); color: #ffd93d; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            color: #8b9dc3;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab.active { background: rgba(0,212,255,0.1); border-color: #00d4ff; color: #00d4ff; }
+        .tab:hover { background: rgba(255,255,255,0.08); }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .help-text { font-size: 0.75rem; color: #6b7b9c; margin-top: 4px; }
+        .password-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>⚙️ 后台管理</h1>
+                <p class="subtitle">伺服电缆选型工具 - 系统配置</p>
+            </div>
+            <a class="logout-btn" onclick="logout()">退出登录</a>
+        </div>
+
+        <div class="alert alert-warning" id="statusAlert">
+            ⚠️ 查询限制已启用，用户只能免费查询 <strong id="freeCount">1</strong> 次
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('limit')">查询限制</div>
+            <div class="tab" onclick="showTab('text')">网站文字</div>
+            <div class="tab" onclick="showTab('codes')">解锁码</div>
+            <div class="tab" onclick="showTab('password')">修改密码</div>
+        </div>
+
+        <!-- Tab 1: 查询限制 -->
+        <div class="tab-content active" id="tab-limit">
+            <div class="card">
+                <div class="card-title">查询限制设置</div>
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">启用查询限制</div>
+                        <div style="font-size:0.8rem;color:#6b7b9c;margin-top:4px;">关闭后所有用户可无限查询</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="limitEnabled" checked onchange="saveConfig()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">免费查询次数</div>
+                    <input type="number" id="freeQueries" value="1" min="0" max="100" style="width:80px;padding:6px 10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;text-align:center;" onchange="saveConfig()">
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">客服微信号</div>
+                    <input type="text" id="wechatId" value="zzh250058" style="width:150px;padding:6px 10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;" onchange="saveConfig()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: 网站文字 -->
+        <div class="tab-content" id="tab-text">
+            <div class="card">
+                <div class="card-title">网站标题与副标题</div>
+                <div class="input-group">
+                    <label>网站标题</label>
+                    <input type="text" id="siteTitle" value="伺服电缆选型工具" onchange="saveConfig()">
+                </div>
+                <div class="input-group">
+                    <label>网站副标题</label>
+                    <input type="text" id="siteSubtitle" value="基于实际电缆数据库，智能匹配安川伺服电机电缆型号" onchange="saveConfig()">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">弹窗文字</div>
+                <div class="input-group">
+                    <label>次数用完弹窗标题</label>
+                    <input type="text" id="modalTitle" value="查询次数已用完" onchange="saveConfig()">
+                </div>
+                <div class="input-group">
+                    <label>弹窗提示文字</label>
+                    <textarea id="modalText" onchange="saveConfig()">您已使用完免费查询次数。
+添加客服微信，获取解锁码后即可无限查询。</textarea>
+                    <div class="help-text">支持换行，会在弹窗中显示</div>
+                </div>
+                <div class="input-group">
+                    <label>解锁成功提示</label>
+                    <input type="text" id="unlockSuccess" value="🎉 解锁成功！您现在可以无限查询了。" onchange="saveConfig()">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">使用说明</div>
+                <div class="input-group">
+                    <label>使用说明列表（每行一条）</label>
+                    <textarea id="tipsText" rows="5" onchange="saveConfig()">支持完整型号（如 SGMXG-09AUA61C2）和短代码（如 SGMXG-09/13）搜索
+左右分栏展示电机电缆和编码器电缆，无需频繁上下滚动
+电机电缆根据型号自动匹配（61C2=无抱闸，6CC2=带抱闸）
+编码器电缆显示该电机所有可选类型（无电池/带电池），供用户自选
+免费查询1次，添加客服微信可解锁无限查询</textarea>
+                    <div class="help-text">每行会显示为一个列表项</div>
+                </div>
+            </div>
+
+            <button class="btn btn-block" onclick="saveConfig()">💾 保存所有文字配置</button>
+        </div>
+
+        <!-- Tab 3: 解锁码 -->
+        <div class="tab-content" id="tab-codes">
+            <div class="card">
+                <div class="card-title">解锁码管理</div>
+                <div class="input-row">
+                    <div class="input-group" style="margin-bottom:0;">
+                        <label>添加新解锁码</label>
+                        <input type="text" id="newCode" placeholder="输入解锁码（如：VIP2024）" style="text-transform:uppercase;">
+                    </div>
+                    <button class="btn btn-sm" onclick="addCode()">添加</button>
+                </div>
+                <div class="code-list" id="codeList"></div>
+            </div>
+        </div>
+
+        <!-- Tab 4: 修改密码 -->
+        <div class="tab-content" id="tab-password">
+            <div class="card">
+                <div class="card-title">修改管理密码</div>
+                <div class="input-group">
+                    <label>当前密码</label>
+                    <input type="password" id="oldPassword" placeholder="请输入当前密码">
+                </div>
+                <div class="password-row">
+                    <div class="input-group">
+                        <label>新密码</label>
+                        <input type="password" id="newPassword" placeholder="请输入新密码">
+                    </div>
+                    <div class="input-group">
+                        <label>确认新密码</label>
+                        <input type="password" id="confirmPassword" placeholder="请再次输入新密码">
+                    </div>
+                </div>
+                <button class="btn btn-block" onclick="changePassword()">修改密码</button>
+            </div>
+            <div style="text-align:center;color:#6b7b9c;font-size:0.8rem;">
+                默认密码：kzy2024（首次登录后请立即修改）
+            </div>
+        </div>
+
+        <div style="text-align:center;color:#6b7b9c;font-size:0.8rem;margin-top:20px;">
+            配置会自动保存到浏览器，刷新前端页面后生效
+        </div>
+    </div>
+
+    <script>
+        // 检查登录状态
+        if (sessionStorage.getItem('servo_admin_logged_in') !== 'true') {
+            window.location.href = 'admin.html';
+        }
+
+        const DEFAULT_PASSWORD = 'kzy2024';
+        
+        let config = {
+            limitEnabled: true,
+            freeQueries: 1,
+            wechatId: 'zzh250058',
+            unlockCodes: ['KZY2024', 'SERVO888', 'CABLE666'],
+            siteTitle: '伺服电缆选型工具',
+            siteSubtitle: '基于实际电缆数据库，智能匹配安川伺服电机电缆型号',
+            modalTitle: '查询次数已用完',
+            modalText: '您已使用完免费查询次数。\n添加客服微信，获取解锁码后即可无限查询。',
+            unlockSuccess: '🎉 解锁成功！您现在可以无限查询了。',
+            tipsText: '支持完整型号（如 SGMXG-09AUA61C2）和短代码（如 SGMXG-09/13）搜索\n左右分栏展示电机电缆和编码器电缆，无需频繁上下滚动\n电机电缆根据型号自动匹配（61C2=无抱闸，6CC2=带抱闸）\n编码器电缆显示该电机所有可选类型（无电池/带电池），供用户自选\n免费查询1次，添加客服微信可解锁无限查询'
+        };
+
+        function logout() {
+            sessionStorage.removeItem('servo_admin_logged_in');
+            window.location.href = 'admin.html';
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        function loadConfig() {
+            const saved = localStorage.getItem('servo_admin_config');
+            if (saved) {
+                try {
+                    config = { ...config, ...JSON.parse(saved) };
+                } catch (e) {}
+            }
+            document.getElementById('limitEnabled').checked = config.limitEnabled;
+            document.getElementById('freeQueries').value = config.freeQueries;
+            document.getElementById('wechatId').value = config.wechatId;
+            document.getElementById('freeCount').textContent = config.freeQueries;
+            
+            document.getElementById('siteTitle').value = config.siteTitle || '伺服电缆选型工具';
+            document.getElementById('siteSubtitle').value = config.siteSubtitle || '';
+            document.getElementById('modalTitle').value = config.modalTitle || '';
+            document.getElementById('modalText').value = config.modalText || '';
+            document.getElementById('unlockSuccess').value = config.unlockSuccess || '';
+            document.getElementById('tipsText').value = config.tipsText || '';
+            
+            updateAlert();
+            renderCodes();
+        }
+
+        function saveConfig() {
+            config.limitEnabled = document.getElementById('limitEnabled').checked;
+            config.freeQueries = parseInt(document.getElementById('freeQueries').value) || 1;
+            config.wechatId = document.getElementById('wechatId').value || 'zzh250058';
+            
+            config.siteTitle = document.getElementById('siteTitle').value;
+            config.siteSubtitle = document.getElementById('siteSubtitle').value;
+            config.modalTitle = document.getElementById('modalTitle').value;
+            config.modalText = document.getElementById('modalText').value;
+            config.unlockSuccess = document.getElementById('unlockSuccess').value;
+            config.tipsText = document.getElementById('tipsText').value;
+            
+            document.getElementById('freeCount').textContent = config.freeQueries;
+            localStorage.setItem('servo_admin_config', JSON.stringify(config));
+            updateAlert();
+            syncToFrontend();
+        }
+
+        function updateAlert() {
+            const alert = document.getElementById('statusAlert');
+            if (config.limitEnabled) {
+                alert.className = 'alert alert-warning';
+                alert.innerHTML = '⚠️ 查询限制已启用，用户只能免费查询 <strong>' + config.freeQueries + '</strong> 次';
+            } else {
+                alert.className = 'alert alert-success';
+                alert.innerHTML = '✅ 查询限制已关闭，所有用户可无限查询';
+            }
+        }
+
+        function addCode() {
+            const input = document.getElementById('newCode');
+            const code = input.value.trim().toUpperCase();
+            if (!code) return;
+            if (config.unlockCodes.includes(code)) {
+                alert('该解锁码已存在');
+                return;
+            }
+            config.unlockCodes.push(code);
+            saveConfig();
+            renderCodes();
+            input.value = '';
+        }
+
+        function removeCode(code) {
+            config.unlockCodes = config.unlockCodes.filter(c => c !== code);
+            saveConfig();
+            renderCodes();
+        }
+
+        function renderCodes() {
+            const list = document.getElementById('codeList');
+            if (config.unlockCodes.length === 0) {
+                list.innerHTML = '<div style="color:#6b7b9c;text-align:center;padding:12px;">暂无解锁码</div>';
+                return;
+            }
+            list.innerHTML = config.unlockCodes.map(code => `
+                <div class="code-item">
+                    <span class="code-text">${code}</span>
+                    <button class="btn btn-sm btn-danger" onclick="removeCode('${code}')">删除</button>
+                </div>
+            `).join('');
+        }
+
+        function changePassword() {
+            const oldPwd = document.getElementById('oldPassword').value;
+            const newPwd = document.getElementById('newPassword').value;
+            const confirmPwd = document.getElementById('confirmPassword').value;
+            
+            const savedPassword = localStorage.getItem('servo_admin_password') || DEFAULT_PASSWORD;
+            
+            if (oldPwd !== savedPassword) {
+                alert('当前密码错误');
+                return;
+            }
+            if (!newPwd) {
+                alert('请输入新密码');
+                return;
+            }
+            if (newPwd !== confirmPwd) {
+                alert('两次输入的新密码不一致');
+                return;
+            }
+            if (newPwd.length < 4) {
+                alert('密码至少4位');
+                return;
+            }
+            
+            localStorage.setItem('servo_admin_password', newPwd);
+            alert('密码修改成功！请记住新密码：' + newPwd);
+            
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        function syncToFrontend() {
+            localStorage.setItem('servo_config', JSON.stringify({
+                limitEnabled: config.limitEnabled,
+                freeQueries: config.freeQueries,
+                wechatId: config.wechatId,
+                unlockCodes: config.unlockCodes,
+                siteTitle: config.siteTitle,
+                siteSubtitle: config.siteSubtitle,
+                modalTitle: config.modalTitle,
+                modalText: config.modalText,
+                unlockSuccess: config.unlockSuccess,
+                tipsText: config.tipsText
+            }));
+        }
+
+        loadConfig();
+    </script>
+</body>
+</html>

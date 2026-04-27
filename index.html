@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>伺服电缆选型工具</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #0a0e1a;
+            color: #e0e6ed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .container { width: 100%; max-width: 1100px; }
+        h1 {
+            text-align: center; font-size: 2.2rem; font-weight: 300; margin-bottom: 8px;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b61ff 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .subtitle { text-align: center; color: #6b7b9c; font-size: 0.95rem; margin-bottom: 40px; }
+        .input-section, .result-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px; padding: 30px 35px; margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .result-section { display: none; }
+        .result-section.show { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        @media (max-width: 768px) { .input-row { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 480px) { .input-row { grid-template-columns: 1fr; } }
+        .input-group { margin-bottom: 16px; }
+        label { display: block; font-size: 0.82rem; color: #8b9dc3; margin-bottom: 8px; font-weight: 500; }
+        select, input[type="text"] {
+            width: 100%; padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px; color: #fff; font-size: 0.95rem;
+            outline: none; transition: all 0.3s ease;
+        }
+        select { appearance: none; cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b7b9c' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center;
+        }
+        select:focus, input[type="text"]:focus { border-color: #00d4ff; box-shadow: 0 0 0 2px rgba(0,212,255,0.12); }
+        select:disabled { opacity: 0.5; cursor: not-allowed; }
+        input[type="text"]::placeholder { color: #4a5568; }
+        .status-bar { font-size: 0.78rem; color: #4a5568; margin-top: 4px; min-height: 18px; }
+        .status-bar.ok { color: #51cf66; }
+        .status-bar.err { color: #ff6b6b; }
+        .btn {
+            width: 100%; padding: 13px;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b61ff 100%);
+            border: none; border-radius: 8px;
+            color: #fff; font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,212,255,0.25); }
+        .result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .result-title { font-size: 1.1rem; color: #00d4ff; font-weight: 500; }
+        .result-title::before {
+            content: ''; display: inline-block;
+            width: 4px; height: 18px;
+            background: linear-gradient(180deg, #00d4ff 0%, #7b61ff 100%); border-radius: 2px; margin-right: 4px;
+        }
+        .result-subtitle { font-size: 0.82rem; color: #6b7b9c; margin-left: auto; }
+        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 700px) { .result-grid { grid-template-columns: 1fr; } }
+        .col-header {
+            font-size: 0.82rem; font-weight: 600; padding: 8px 14px;
+            border-radius: 8px 8px 0 0; margin-bottom: 0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .col-header.motor { background: rgba(0, 212, 255, 0.12); color: #00d4ff; border-bottom: 2px solid rgba(0,212,255,0.3); }
+        .col-header.encoder { background: rgba(123, 97, 255, 0.12); color: #a78bfa; border-bottom: 2px solid rgba(123,97,255,0.3); }
+        .col-body { background: rgba(0,0,0,0.15); border-radius: 0 0 10px 10px; padding: 12px; }
+        .col-empty { text-align: center; color: #4a5568; font-size: 0.85rem; padding: 24px 0; }
+        .cable-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .cable-item:last-child { margin-bottom: 0; }
+        .cable-motor { border-left: 3px solid #00d4ff; }
+        .cable-encoder { border-left: 3px solid #a78bfa; }
+        .cable-type-label { font-size: 0.75rem; color: #6b7b9c; font-weight: 500; }
+        .cable-model { font-size: 0.95rem; color: #00d4ff; font-weight: 600; letter-spacing: 0.3px; margin: 4px 0; }
+        .cable-detail { font-size: 0.8rem; color: #8b9dc3; padding: 2px 0; }
+        .cable-detail span { color: #e0e6ed; }
+        .brand-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+        .brand-tag {
+            padding: 6px 16px; border-radius: 16px; font-size: 0.85rem;
+            cursor: pointer; border: 1px solid rgba(0,212,255,0.3); color: #00d4ff;
+            transition: all 0.2s ease; background: transparent;
+        }
+        .brand-tag.active { background: rgba(0,212,255,0.15); border-color: #00d4ff; font-weight: 600; }
+        .brand-tag:hover { background: rgba(0,212,255,0.08); }
+        .tips { margin-top: 25px; padding: 18px 20px; background: rgba(0,212,255,0.04); border-radius: 10px; border-left: 3px solid rgba(0,212,255,0.4); }
+        .tips-title { font-size: 0.85rem; color: #00d4ff; margin-bottom: 8px; }
+        .tips-list { list-style: none; font-size: 0.82rem; color: #6b7b9c; }
+        .tips-list li { padding: 3px 0; padding-left: 16px; position: relative; }
+        .tips-list li::before { content: '-'; position: absolute; left: 4px; color: #00d4ff; }
+        .query-counter {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 16px; border-radius: 8px; margin-bottom: 20px;
+            background: rgba(255,217,61,0.08); border: 1px solid rgba(255,217,61,0.2);
+            font-size: 0.85rem;
+        }
+        .query-counter.unlimited { background: rgba(81,207,102,0.08); border-color: rgba(81,207,102,0.2); }
+        .query-counter-text { color: #ffd93d; }
+        .query-counter.unlimited .query-counter-text { color: #51cf66; }
+        .query-counter-btn {
+            padding: 4px 12px; border-radius: 4px; font-size: 0.75rem;
+            background: rgba(255,217,61,0.15); color: #ffd93d; border: 1px solid rgba(255,217,61,0.3);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .query-counter-btn:hover { background: rgba(255,217,61,0.25); }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1000; padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-content {
+            background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%);
+            border: 1px solid rgba(0,212,255,0.2);
+            border-radius: 16px; padding: 32px;
+            max-width: 420px; width: 100%;
+            text-align: center; animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-icon {
+            width: 64px; height: 64px; margin: 0 auto 20px;
+            background: rgba(0,212,255,0.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px;
+        }
+        .modal-title { font-size: 1.3rem; color: #00d4ff; margin-bottom: 12px; }
+        .modal-text { font-size: 0.9rem; color: #8b9dc3; margin-bottom: 24px; line-height: 1.6; }
+        .modal-wechat { 
+            background: rgba(0,212,255,0.05); border: 1px dashed rgba(0,212,255,0.3);
+            border-radius: 8px; padding: 16px; margin-bottom: 20px;
+        }
+        .modal-wechat-label { font-size: 0.75rem; color: #6b7b9c; margin-bottom: 4px; }
+        .modal-wechat-id { font-size: 1.1rem; color: #00d4ff; font-weight: 600; }
+        .modal-input {
+            width: 100%; padding: 12px 16px; margin-bottom: 12px;
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; color: #fff; font-size: 0.95rem;
+            text-align: center; letter-spacing: 2px;
+        }
+        .modal-input::placeholder { color: #4a5568; letter-spacing: normal; }
+        .modal-btn {
+            width: 100%; padding: 12px;
+            background: linear-gradient(135deg, #00d4ff 0%, #7b61ff 100%);
+            border: none; border-radius: 8px; color: #fff;
+            font-size: 0.95rem; font-weight: 600; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .modal-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,212,255,0.25); }
+        .modal-close { margin-top: 16px; font-size: 0.8rem; color: #6b7b9c; cursor: pointer; text-decoration: underline; }
+        .modal-close:hover { color: #8b9dc3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>伺服电缆选型工具</h1>
+        <p class="subtitle">基于实际电缆数据库，智能匹配安川伺服电机电缆型号</p>
+
+        <div class="input-section">
+            <div class="query-counter" id="queryCounter">
+                <span class="query-counter-text" id="queryCounterText">免费查询次数：加载中...</span>
+                <button class="query-counter-btn" id="unlockBtn" style="display:none;" onclick="showUnlockModal()">输入解锁码</button>
+            </div>
+
+            <div class="input-group">
+                <label>选择品牌</label>
+                <div class="brand-tags" id="brandTags">
+                    <span class="brand-tag" style="border-color:rgba(255,255,255,0.1);color:#6b7b9c;">加载中...</span>
+                </div>
+                <div class="status-bar" id="statusBar"></div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="motorSelect">电机型号</label>
+                    <select id="motorSelect" disabled>
+                        <option value="">-- 先选品牌 --</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="cableTypeSelect">电缆类型</label>
+                    <select id="cableTypeSelect" disabled>
+                        <option value="">-- 先选电机 --</option>
+                    </select>
+                </div>
+                <div class="input-group" style="display:flex;flex-direction:column;justify-content:flex-end;">
+                    <button class="btn" id="searchBtn" onclick="searchCables()">查询电缆</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="motorInput">直接输入型号搜索（支持完整型号或短代码）</label>
+                <input type="text" id="motorInput" placeholder="例如：SGMXG-09/13 或 SGMXG-09AUA61C2" autocomplete="off">
+                <div class="status-bar" id="searchStatus"></div>
+            </div>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-header">
+                <div class="result-title">选型结果</div>
+                <div class="result-subtitle" id="resultSubtitle"></div>
+            </div>
+            <div class="result-grid">
+                <div class="result-col">
+                    <div class="col-header motor">电机电缆（主回路）</div>
+                    <div class="col-body" id="motorCables"></div>
+                </div>
+                <div class="result-col">
+                    <div class="col-header encoder">编码器电缆</div>
+                    <div class="col-body" id="encoderCables"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tips">
+            <div class="tips-title">使用说明</div>
+            <ul class="tips-list">
+                <li>支持完整型号和短代码搜索</li>
+                <li>左右分栏展示电机电缆和编码器电缆</li>
+                <li>免费查询1次，添加客服微信可解锁无限查询</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="limitModal">
+        <div class="modal-content">
+            <div class="modal-icon">🔒</div>
+            <div class="modal-title">查询次数已用完</div>
+            <div class="modal-text">您已使用完免费查询次数。添加客服微信，获取解锁码后即可无限查询。</div>
+            <div class="modal-wechat">
+                <div class="modal-wechat-label">客服微信号</div>
+                <div class="modal-wechat-id" id="wechatId">加载中...</div>
+            </div>
+            <button class="modal-btn" onclick="showUnlockModal()">我有解锁码</button>
+            <div class="modal-close" onclick="closeModal('limitModal')">稍后再说</div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="unlockModal">
+        <div class="modal-content">
+            <div class="modal-icon">🔑</div>
+            <div class="modal-title">输入解锁码</div>
+            <div class="modal-text">添加客服微信获取解锁码，输入后即可解锁无限查询。</div>
+            <div class="modal-wechat">
+                <div class="modal-wechat-label">客服微信号</div>
+                <div class="modal-wechat-id" id="wechatId2">加载中...</div>
+            </div>
+            <input type="text" class="modal-input" id="unlockCodeInput" placeholder="请输入解锁码" maxlength="20">
+            <button class="modal-btn" onclick="verifyUnlockCode()">立即解锁</button>
+            <div class="modal-close" onclick="closeModal('unlockModal')">取消</div>
+        </div>
+    </div>
+
+    <script>
+        // 默认配置（会被后台配置覆盖）
+        let CONFIG = {
+            FREE_QUERIES: 1,
+            WECHAT_ID: 'zzh250058',
+            UNLOCK_CODES: ['KZY2024', 'SERVO888', 'CABLE666'],
+            // 文字配置
+            SITE_TITLE: '伺服电缆选型工具',
+            SITE_SUBTITLE: '基于实际电缆数据库，智能匹配安川伺服电机电缆型号',
+            MODAL_TITLE: '查询次数已用完',
+            MODAL_TEXT: '您已使用完免费查询次数。\n添加客服微信，获取解锁码后即可无限查询。',
+            UNLOCK_SUCCESS: '🎉 解锁成功！您现在可以无限查询了。',
+            TIPS_TEXT: '支持完整型号（如 SGMXG-09AUA61C2）和短代码（如 SGMXG-09/13）搜索\n左右分栏展示电机电缆和编码器电缆，无需频繁上下滚动\n电机电缆根据型号自动匹配（61C2=无抱闸，6CC2=带抱闸）\n编码器电缆显示该电机所有可选类型（无电池/带电池），供用户自选\n免费查询1次，添加客服微信可解锁无限查询'
+        };
+
+        // 从后台配置加载
+        function loadAdminConfig() {
+            const saved = localStorage.getItem('servo_config');
+            if (saved) {
+                try {
+                    const adminConfig = JSON.parse(saved);
+                    if (adminConfig.limitEnabled === false) {
+                        CONFIG.FREE_QUERIES = 999999;
+                    } else {
+                        CONFIG.FREE_QUERIES = adminConfig.freeQueries || 1;
+                    }
+                    CONFIG.WECHAT_ID = adminConfig.wechatId || 'zzh250058';
+                    CONFIG.UNLOCK_CODES = adminConfig.unlockCodes || ['KZY2024', 'SERVO888', 'CABLE666'];
+                    // 文字配置
+                    if (adminConfig.siteTitle) CONFIG.SITE_TITLE = adminConfig.siteTitle;
+                    if (adminConfig.siteSubtitle) CONFIG.SITE_SUBTITLE = adminConfig.siteSubtitle;
+                    if (adminConfig.modalTitle) CONFIG.MODAL_TITLE = adminConfig.modalTitle;
+                    if (adminConfig.modalText) CONFIG.MODAL_TEXT = adminConfig.modalText;
+                    if (adminConfig.unlockSuccess) CONFIG.UNLOCK_SUCCESS = adminConfig.unlockSuccess;
+                    if (adminConfig.tipsText) CONFIG.TIPS_TEXT = adminConfig.tipsText;
+                } catch (e) {
+                    console.error('Failed to load admin config:', e);
+                }
+            }
+        }
+
+        // 应用文字配置到页面
+        function applyTextConfig() {
+            document.querySelector('h1').textContent = CONFIG.SITE_TITLE;
+            document.querySelector('.subtitle').textContent = CONFIG.SITE_SUBTITLE;
+            document.querySelector('.modal-title').textContent = CONFIG.MODAL_TITLE;
+            document.querySelector('.modal-text').innerHTML = CONFIG.MODAL_TEXT.replace(/\n/g, '<br>');
+            // 解锁成功提示在 verifyUnlockCode 里用
+            // 使用说明
+            const tipsList = document.querySelector('.tips-list');
+            if (tipsList && CONFIG.TIPS_TEXT) {
+                tipsList.innerHTML = CONFIG.TIPS_TEXT.split('\n').map(tip => '<li>' + tip + '</li>').join('');
+            }
+        }
+        let allCables = [], cablesByBrand = {}, selectedBrand = '';
+        let userState = { queriesUsed: 0, isUnlimited: false, userId: null };
+
+        function setCookie(name, value, days) {
+            const expires = new Date(Date.now() + days * 864e5).toUTCString();
+            document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/; SameSite=Lax';
+        }
+        function getCookie(name) {
+            return document.cookie.split('; ').reduce((r, v) => {
+                const parts = v.split('=');
+                return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+            }, '');
+        }
+        function generateUserId() {
+            return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+        function initUserState() {
+            let userId = getCookie('servo_user_id');
+            if (!userId) { userId = generateUserId(); setCookie('servo_user_id', userId, 365); }
+            userState.userId = userId;
+            const savedState = getCookie('servo_user_state');
+            if (savedState) {
+                try {
+                    const parsed = JSON.parse(savedState);
+                    userState.queriesUsed = parsed.queriesUsed || 0;
+                    userState.isUnlimited = parsed.isUnlimited || false;
+                } catch (e) {}
+            }
+            updateQueryCounter();
+            document.getElementById('wechatId').textContent = CONFIG.WECHAT_ID;
+            document.getElementById('wechatId2').textContent = CONFIG.WECHAT_ID;
+        }
+        function saveUserState() {
+            setCookie('servo_user_state', JSON.stringify({ queriesUsed: userState.queriesUsed, isUnlimited: userState.isUnlimited }), 365);
+        }
+        function updateQueryCounter() {
+            const counterEl = document.getElementById('queryCounter');
+            const textEl = document.getElementById('queryCounterText');
+            const unlockBtn = document.getElementById('unlockBtn');
+            if (userState.isUnlimited) {
+                counterEl.classList.add('unlimited');
+                textEl.textContent = '✓ 已解锁无限查询';
+                unlockBtn.style.display = 'none';
+            } else {
+                counterEl.classList.remove('unlimited');
+                const remaining = Math.max(0, CONFIG.FREE_QUERIES - userState.queriesUsed);
+                textEl.textContent = '免费查询次数：' + remaining + ' / ' + CONFIG.FREE_QUERIES;
+                unlockBtn.style.display = userState.queriesUsed >= CONFIG.FREE_QUERIES ? 'inline-block' : 'none';
+            }
+        }
+        function canQuery() { return userState.isUnlimited || userState.queriesUsed < CONFIG.FREE_QUERIES; }
+        function recordQuery() {
+            if (!userState.isUnlimited) { userState.queriesUsed++; saveUserState(); updateQueryCounter(); }
+        }
+        function showModal(modalId) { document.getElementById(modalId).classList.add('show'); }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('show'); }
+        function showUnlockModal() {
+            closeModal('limitModal');
+            document.getElementById('unlockCodeInput').value = '';
+            showModal('unlockModal');
+        }
+        function verifyUnlockCode() {
+            const code = document.getElementById('unlockCodeInput').value.trim().toUpperCase();
+            if (CONFIG.UNLOCK_CODES.includes(code)) {
+                userState.isUnlimited = true; saveUserState(); updateQueryCounter();
+                closeModal('unlockModal');
+                alert(CONFIG.UNLOCK_SUCCESS);
+            } else {
+                alert('❌ 解锁码无效，请检查或联系客服获取。');
+            }
+        }
+        async function init() {
+            loadAdminConfig();
+            applyTextConfig();
+            initUserState();
+            setStatus('正在连接数据库...', '');
+            try {
+                const resp = await fetch('/servo-cable/api/cables');
+                if (!resp.ok) throw new Error('API failed');
+                allCables = await resp.json();
+                const brands = [...new Set(allCables.map(c => c.brand))];
+                brands.forEach(b => { cablesByBrand[b] = allCables.filter(c => c.brand === b); });
+                renderBrandTags(brands);
+                setStatus('数据库加载完成：' + allCables.length + ' 条记录', 'ok');
+            } catch (e) { setStatus('数据库连接失败', 'err'); console.error(e); }
+        }
+        function setStatus(msg, cls) {
+            document.getElementById('statusBar').textContent = msg;
+            document.getElementById('statusBar').className = 'status-bar' + (cls ? ' ' + cls : '');
+        }
+        function renderBrandTags(brands) {
+            const el = document.getElementById('brandTags');
+            el.innerHTML = brands.map(b => '<span class="brand-tag" onclick="selectBrand(\'' + b + '\')">' + b + '</span>').join('');
+        }
+        function selectBrand(brand) {
+            selectedBrand = brand;
+            document.querySelectorAll('.brand-tag').forEach(tag => {
+                if (tag.textContent.trim() === brand) tag.classList.add('active');
+                else tag.classList.remove('active');
+            });
+            const motors = [...new Set((cablesByBrand[brand] || []).map(c => c.motor_model))].sort();
+            const select = document.getElementById('motorSelect');
+            select.innerHTML = '<option value="">-- 选择型号 --</option>' + motors.map(m => '<option value="' + m + '">' + m + '</option>').join('');
+            select.disabled = false;
+            document.getElementById('cableTypeSelect').innerHTML = '<option value="">-- 选择类型 --</option>';
+            document.getElementById('cableTypeSelect').disabled = true;
+            document.getElementById('resultSection').classList.remove('show');
+        }
+        document.getElementById('motorSelect').addEventListener('change', function() {
+            const motor = this.value;
+            const typeSelect = document.getElementById('cableTypeSelect');
+            if (!motor) { typeSelect.innerHTML = '<option value="">-- 选择类型 --</option>'; typeSelect.disabled = true; return; }
+            const cables = (cablesByBrand[selectedBrand] || []).filter(c => c.motor_model === motor);
+            const types = [...new Set(cables.map(c => c.cable_type))].sort();
+            typeSelect.innerHTML = '<option value="">全部类型</option>' + types.map(t => '<option value="' + t + '">' + t + '</option>').join('');
+            typeSelect.disabled = false;
+            document.getElementById('motorInput').value = motor;
+        });
+        document.getElementById('motorInput').addEventListener('input', function() {
+            const val = this.value.trim().toUpperCase();
+            const statusEl = document.getElementById('searchStatus');
+            if (!val) { statusEl.textContent = ''; return; }
+            const matched = allCables.filter(c => (c.motor_model || '').toUpperCase().includes(val) || (c.full_model || '').toUpperCase().includes(val));
+            statusEl.textContent = matched.length ? '匹配 ' + matched.length + ' 条记录' : '无匹配';
+            statusEl.style.color = matched.length ? '#51cf66' : '#ff6b6b';
+        });
+        document.getElementById('motorInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') searchCables(); });
+        function searchCables() {
+            if (!canQuery()) { showModal('limitModal'); return; }
+            const motorInput = document.getElementById('motorInput').value.trim().toUpperCase();
+            const motorSelect = document.getElementById('motorSelect').value;
+            const cableType = document.getElementById('cableTypeSelect').value;
+            const motorModel = motorSelect || motorInput;
+            if (!motorModel) { alert('请输入或选择电机型号'); return; }
+            recordQuery();
+            let matched = allCables.filter(c => {
+                const mm = (c.motor_model || '').toUpperCase();
+                const fm = (c.full_model || '').toUpperCase();
+                return mm.includes(motorModel) || fm.includes(motorModel);
+            });
+            if (!matched.length) { showEmpty('未找到 "' + motorModel + '" 的记录'); return; }
+            const baseMotorModel = matched[0].motor_model;
+            if (cableType) matched = matched.filter(c => c.cable_type === cableType);
+            const motorCables = matched.filter(c => c.cable_type && c.cable_type.includes('主回路'));
+            const encoderCables = allCables.filter(c => c.motor_model === baseMotorModel && c.cable_type && (c.cable_type.includes('编码器') || c.cable_type.includes('ENCODER')));
+            document.getElementById('resultSubtitle').textContent = (matched[0].full_model || motorModel) + '  |  电机电缆: ' + motorCables.length + ' 条, 编码器电缆: ' + encoderCables.length + ' 条';
+            renderCableList('motorCables', motorCables, 'motor');
+            renderCableList('encoderCables', encoderCables, 'encoder');
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        function renderCableList(containerId, cables, type) {
+            const el = document.getElementById(containerId);
+            if (!cables.length) { el.innerHTML = '<div class="col-empty">无' + (type === 'motor' ? '电机' : '编码器') + '电缆数据</div>'; return; }
+            el.innerHTML = cables.map(function(c) {
+                return '<div class="cable-item cable-' + type + '">' +
+                    '<div class="cable-type-label">' + escHtml(c.cable_type || '') + '</div>' +
+                    '<div class="cable-model">' + escHtml(c.standard_model || '--') + '</div>' +
+                    (c.connector_spec ? '<div class="cable-detail">接头规格: <span>' + escHtml(c.connector_spec) + '</span></div>' : '') +
+                    (c.length_m ? '<div class="cable-detail">长度: <span>' + (String(c.length_m).endsWith('m') ? c.length_m : c.length_m + 'm') + '</span></div>' : '') +
+                    (c.remark ? '<div class="cable-detail">备注: <span>' + escHtml(c.remark) + '</span></div>' : '') +
+                    '</div>';
+            }).join('');
+        }
+        function showEmpty(msg) {
+            document.getElementById('resultSubtitle').textContent = '';
+            document.getElementById('motorCables').innerHTML = '<div class="col-empty">' + msg + '</div>';
+            document.getElementById('encoderCables').innerHTML = '<div class="col-empty"></div>';
+            document.getElementById('resultSection').classList.add('show');
+        }
+        function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+        init();
+    </script>
+</body>
+</html>
