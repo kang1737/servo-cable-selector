@@ -368,6 +368,7 @@
             
             document.getElementById('freeCount').textContent = config.freeQueries;
             localStorage.setItem('servo_admin_config', JSON.stringify(config));
+            localStorage.setItem('servo_config', JSON.stringify(config));
             updateAlert();
             syncToFrontend();
         }
