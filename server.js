@@ -101,9 +101,25 @@ app.get('/api/cable-types', (req, res) => {
     res.json(types.map(t => t.cable_type));
 });
 
+// Load all cables for initial page load (bypasses motor_model requirement)
+app.get('/api/all-cables', (req, res) => {
+    try {
+        const cables = db.prepare("SELECT * FROM cables ORDER BY brand, motor_model, cable_type").all();
+        res.json(cables);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Search cables - main query endpoint
 app.get('/api/cables', (req, res) => {
     const { motor_model, brand, cable_type, connector_spec, length_m } = req.query;
+
+    // 防批量下载：必须传入至少2个字符的型号，否则返回空
+    if (!motor_model || motor_model.trim().length < 2) {
+        return res.json([]);
+    }
+
     const brand_ = brand || '安川';
 
     const conds = ['brand = ?'];
