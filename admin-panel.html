@@ -28,7 +28,6 @@
             text-decoration: none;
         }
         .logout-btn:hover { background: rgba(255,107,107,0.2); }
-        
         .card {
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.08);
@@ -37,126 +36,84 @@
             margin-bottom: 20px;
         }
         .card-title { font-size: 1.1rem; color: #00d4ff; margin-bottom: 16px; }
-        
         .setting-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .setting-row:last-child { border-bottom: none; }
         .setting-label { color: #8b9dc3; }
-        .setting-value { color: #e0e6ed; font-weight: 500; }
-        
-        .switch {
-            position: relative;
-            width: 50px;
-            height: 26px;
-        }
+        .switch { position: relative; width: 50px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,255,255,0.1);
-            border-radius: 26px;
-            transition: 0.3s;
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.1); border-radius: 26px; transition: 0.3s;
         }
         .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background: #6b7b9c;
-            border-radius: 50%;
-            transition: 0.3s;
+            position: absolute; content: ""; height: 20px; width: 20px;
+            left: 3px; bottom: 3px; background: #6b7b9c; border-radius: 50%; transition: 0.3s;
         }
         input:checked + .slider { background: #00d4ff; }
-        input:checked + .slider:before {
-            transform: translateX(24px);
-            background: #fff;
-        }
-        
+        input:checked + .slider:before { transform: translateX(24px); background: #fff; }
         .input-group { margin-bottom: 16px; }
         .input-group label { display: block; color: #8b9dc3; font-size: 0.85rem; margin-bottom: 6px; }
         .input-group input, .input-group textarea {
-            width: 100%;
-            padding: 10px 14px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 6px;
-            color: #fff;
-            font-size: 0.95rem;
+            width: 100%; padding: 10px 14px; background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+            color: #fff; font-size: 0.95rem; outline: none;
+            transition: border-color 0.2s;
         }
+        .input-group input:focus, .input-group textarea:focus { border-color: #00d4ff; }
         .input-group textarea { min-height: 80px; resize: vertical; font-family: inherit; }
         .input-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; }
-        
         .btn {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #00d4ff 0%, #7b61ff 100%);
-            border: none;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 10px 20px; background: linear-gradient(135deg, #00d4ff 0%, #7b61ff 100%);
+            border: none; border-radius: 6px; color: #fff; font-size: 0.9rem;
+            cursor: pointer; transition: all 0.2s;
         }
-        .btn:hover { transform: translateY(-1px); }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,212,255,0.3); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid rgba(0,212,255,0.3);
-            color: #00d4ff;
-        }
-        .btn-danger {
-            background: rgba(255,107,107,0.2);
-            border: 1px solid rgba(255,107,107,0.3);
-            color: #ff6b6b;
-        }
+        .btn-outline { background: transparent; border: 1px solid rgba(0,212,255,0.3); color: #00d4ff; }
+        .btn-danger { background: rgba(255,107,107,0.2); border: 1px solid rgba(255,107,107,0.3); color: #ff6b6b; }
         .btn-block { width: 100%; margin-top: 10px; }
-        
         .code-list { margin-top: 12px; }
         .code-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 12px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 6px;
-            margin-bottom: 8px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 12px; background: rgba(0,0,0,0.2);
+            border-radius: 6px; margin-bottom: 8px;
         }
         .code-text { font-family: monospace; color: #00d4ff; letter-spacing: 1px; }
-        
-        .alert {
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-        }
+        .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; }
         .alert-success { background: rgba(81,207,102,0.1); border: 1px solid rgba(81,207,102,0.3); color: #51cf66; }
         .alert-warning { background: rgba(255,217,61,0.1); border: 1px solid rgba(255,217,61,0.3); color: #ffd93d; }
-        
+        .alert-error { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); color: #ff6b6b; }
+        .alert-info { background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); color: #00d4ff; }
         .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         .tab {
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 6px;
-            color: #8b9dc3;
-            cursor: pointer;
-            transition: all 0.2s;
+            padding: 8px 16px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+            color: #8b9dc3; cursor: pointer; transition: all 0.2s; user-select: none;
         }
         .tab.active { background: rgba(0,212,255,0.1); border-color: #00d4ff; color: #00d4ff; }
         .tab:hover { background: rgba(255,255,255,0.08); }
-        
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        
         .help-text { font-size: 0.75rem; color: #6b7b9c; margin-top: 4px; }
         .password-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .toast {
+            position: fixed; bottom: 24px; right: 24px;
+            padding: 12px 20px; border-radius: 8px;
+            font-size: 0.9rem; z-index: 1000;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+        }
+        .toast-success { background: rgba(81,207,102,0.9); color: #fff; }
+        .toast-error { background: rgba(255,107,107,0.9); color: #fff; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .saving-indicator { color: #6b7b9c; font-size: 0.8rem; margin-left: 8px; }
+        .saving { color: #ffd93d; }
+        .saved { color: #51cf66; }
+        .small-input { width: 120px; }
     </style>
 </head>
 <body>
@@ -164,20 +121,20 @@
         <div class="header">
             <div>
                 <h1>⚙️ 后台管理</h1>
-                <p class="subtitle">伺服电缆选型工具 - 系统配置</p>
+                <p class="subtitle">伺服电缆选型工具 · 配置实时同步到服务器</p>
             </div>
-            <a class="logout-btn" onclick="logout()">退出登录</a>
+            <a class="logout-btn" href="admin.html">退出登录</a>
         </div>
 
-        <div class="alert alert-warning" id="statusAlert">
-            ⚠️ 查询限制已启用，用户只能免费查询 <strong id="freeCount">1</strong> 次
+        <div class="alert alert-info" id="statusAlert">
+            正在加载配置...
         </div>
 
         <div class="tabs">
-            <div class="tab active" onclick="showTab('limit')">查询限制</div>
-            <div class="tab" onclick="showTab('text')">网站文字</div>
-            <div class="tab" onclick="showTab('codes')">解锁码</div>
-            <div class="tab" onclick="showTab('password')">修改密码</div>
+            <div class="tab active" data-tab="limit" onclick="showTab('limit')">查询限制</div>
+            <div class="tab" data-tab="text" onclick="showTab('text')">网站文字</div>
+            <div class="tab" data-tab="codes" onclick="showTab('codes')">解锁码</div>
+            <div class="tab" data-tab="password" onclick="showTab('password')">修改密码</div>
         </div>
 
         <!-- Tab 1: 查询限制 -->
@@ -187,20 +144,24 @@
                 <div class="setting-row">
                     <div>
                         <div class="setting-label">启用查询限制</div>
-                        <div style="font-size:0.8rem;color:#6b7b9c;margin-top:4px;">关闭后所有用户可无限查询</div>
+                        <div class="help-text">关闭后所有用户可无限查询</div>
                     </div>
                     <label class="switch">
-                        <input type="checkbox" id="limitEnabled" checked onchange="saveConfig()">
+                        <input type="checkbox" id="limitEnabled" onchange="saveAll()">
                         <span class="slider"></span>
                     </label>
                 </div>
                 <div class="setting-row">
-                    <div class="setting-label">免费查询次数</div>
-                    <input type="number" id="freeQueries" value="1" min="0" max="100" style="width:80px;padding:6px 10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;text-align:center;" onchange="saveConfig()">
+                    <div>
+                        <div class="setting-label">免费查询次数</div>
+                    </div>
+                    <input type="number" id="freeQueries" class="small-input" value="1" min="0" max="100" onchange="saveAll()">
                 </div>
                 <div class="setting-row">
-                    <div class="setting-label">客服微信号</div>
-                    <input type="text" id="wechatId" value="zzh250058" style="width:150px;padding:6px 10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;" onchange="saveConfig()">
+                    <div>
+                        <div class="setting-label">客服微信号</div>
+                    </div>
+                    <input type="text" id="wechatId" class="small-input" value="zzh250058" onchange="saveAll()">
                 </div>
             </div>
         </div>
@@ -211,52 +172,47 @@
                 <div class="card-title">网站标题与副标题</div>
                 <div class="input-group">
                     <label>网站标题</label>
-                    <input type="text" id="siteTitle" value="伺服电缆选型工具" onchange="saveConfig()">
+                    <input type="text" id="siteTitle" placeholder="显示在页面顶部的标题" onchange="saveAll()">
                 </div>
                 <div class="input-group">
                     <label>网站副标题</label>
-                    <input type="text" id="siteSubtitle" value="基于实际电缆数据库，智能匹配安川伺服电机电缆型号" onchange="saveConfig()">
+                    <input type="text" id="siteSubtitle" placeholder="标题下方的描述文字" onchange="saveAll()">
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title">弹窗文字</div>
+                <div class="card-title">弹窗文字（次数用完提示）</div>
                 <div class="input-group">
-                    <label>次数用完弹窗标题</label>
-                    <input type="text" id="modalTitle" value="查询次数已用完" onchange="saveConfig()">
+                    <label>弹窗标题</label>
+                    <input type="text" id="modalTitle" placeholder="弹窗顶部标题" onchange="saveAll()">
                 </div>
                 <div class="input-group">
-                    <label>弹窗提示文字</label>
-                    <textarea id="modalText" onchange="saveConfig()">您已使用完免费查询次数。
-添加客服微信，获取解锁码后即可无限查询。</textarea>
-                    <div class="help-text">支持换行，会在弹窗中显示</div>
+                    <label>弹窗正文</label>
+                    <textarea id="modalText" rows="3" placeholder="弹窗内的提示内容，支持换行" onchange="saveAll()"></textarea>
                 </div>
                 <div class="input-group">
                     <label>解锁成功提示</label>
-                    <input type="text" id="unlockSuccess" value="🎉 解锁成功！您现在可以无限查询了。" onchange="saveConfig()">
+                    <input type="text" id="unlockSuccess" placeholder="输入解锁码成功后的提示语" onchange="saveAll()">
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-title">使用说明</div>
                 <div class="input-group">
-                    <label>使用说明列表（每行一条）</label>
-                    <textarea id="tipsText" rows="5" onchange="saveConfig()">支持完整型号（如 SGMXG-09AUA61C2）和短代码（如 SGMXG-09/13）搜索
-左右分栏展示电机电缆和编码器电缆，无需频繁上下滚动
-电机电缆根据型号自动匹配（61C2=无抱闸，6CC2=带抱闸）
-编码器电缆显示该电机所有可选类型（无电池/带电池），供用户自选
-免费查询1次，添加客服微信可解锁无限查询</textarea>
+                    <label>说明列表（每行一条）</label>
+                    <textarea id="tipsText" rows="5" placeholder="每行显示为一个列表项" onchange="saveAll()"></textarea>
                     <div class="help-text">每行会显示为一个列表项</div>
                 </div>
             </div>
-
-            <button class="btn btn-block" onclick="saveConfig()">💾 保存所有文字配置</button>
         </div>
 
         <!-- Tab 3: 解锁码 -->
         <div class="tab-content" id="tab-codes">
             <div class="card">
                 <div class="card-title">解锁码管理</div>
+                <div class="alert alert-info" style="margin-bottom:16px;">
+                    解锁码可让用户在次数用完后输入，无限查询。
+                </div>
                 <div class="input-row">
                     <div class="input-group" style="margin-bottom:0;">
                         <label>添加新解锁码</label>
@@ -288,129 +244,192 @@
                 </div>
                 <button class="btn btn-block" onclick="changePassword()">修改密码</button>
             </div>
-            <div style="text-align:center;color:#6b7b9c;font-size:0.8rem;">
-                默认密码：kzy2024（首次登录后请立即修改）
+            <div style="text-align:center;color:#6b7b9c;font-size:0.8rem;margin-top:12px;">
+                默认密码：kzy2024
             </div>
         </div>
 
-        <div style="text-align:center;color:#6b7b9c;font-size:0.8rem;margin-top:20px;">
-            配置会自动保存到浏览器，刷新前端页面后生效
+        <div style="text-align:center;color:#4a5568;font-size:0.75rem;margin-top:30px;padding-bottom:20px;">
+            修改会自动保存到服务器 · 刷新页面即可看到最新配置
         </div>
     </div>
 
     <script>
-        // 检查登录状态
-        if (sessionStorage.getItem('servo_admin_logged_in') !== 'true') {
-            window.location.href = 'admin.html';
-        }
+        const API = '/servo-cable/api';
+        let adminPassword = '';
+        let currentConfig = {};
+        let saveTimer = null;
+        let saveStatus = { el: null, timer: null };
 
-        const DEFAULT_PASSWORD = 'kzy2024';
-        
-        let config = {
-            limitEnabled: true,
-            freeQueries: 1,
-            wechatId: 'zzh250058',
-            unlockCodes: ['KZY2024', 'SERVO888', 'CABLE666'],
-            siteTitle: '伺服电缆选型工具',
-            siteSubtitle: '基于实际电缆数据库，智能匹配安川伺服电机电缆型号',
-            modalTitle: '查询次数已用完',
-            modalText: '您已使用完免费查询次数。\n添加客服微信，获取解锁码后即可无限查询。',
-            unlockSuccess: '🎉 解锁成功！您现在可以无限查询了。',
-            tipsText: '支持完整型号（如 SGMXG-09AUA61C2）和短代码（如 SGMXG-09/13）搜索\n左右分栏展示电机电缆和编码器电缆，无需频繁上下滚动\n电机电缆根据型号自动匹配（61C2=无抱闸，6CC2=带抱闸）\n编码器电缆显示该电机所有可选类型（无电池/带电池），供用户自选\n免费查询1次，添加客服微信可解锁无限查询'
-        };
-
-        function logout() {
-            sessionStorage.removeItem('servo_admin_logged_in');
-            window.location.href = 'admin.html';
+        function showToast(msg, type) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const div = document.createElement('div');
+            div.className = 'toast toast-' + type;
+            div.textContent = msg;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
         }
 
         function showTab(tabName) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
+            document.querySelector('[data-tab="' + tabName + '"]').classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        function loadConfig() {
-            const saved = localStorage.getItem('servo_admin_config');
-            if (saved) {
-                try {
-                    config = { ...config, ...JSON.parse(saved) };
-                } catch (e) {}
+        async function loadConfig() {
+            try {
+                const resp = await fetch(API + '/config');
+                if (!resp.ok) throw new Error('加载配置失败');
+                const data = await resp.json();
+                currentConfig = data;
+
+                // 填充表单
+                document.getElementById('limitEnabled').checked = data.limitEnabled !== false;
+                document.getElementById('freeQueries').value = data.freeQueries || 1;
+                document.getElementById('wechatId').value = data.wechatId || 'zzh250058';
+                document.getElementById('siteTitle').value = data.siteTitle || '';
+                document.getElementById('siteSubtitle').value = data.siteSubtitle || '';
+                document.getElementById('modalTitle').value = data.modalTitle || '';
+                document.getElementById('modalText').value = data.modalText || '';
+                document.getElementById('unlockSuccess').value = data.unlockSuccess || '';
+                document.getElementById('tipsText').value = data.tipsText || '';
+
+                updateStatusAlert();
+                renderCodes();
+            } catch (e) {
+                document.getElementById('statusAlert').textContent = '⚠️ 加载配置失败：' + e.message + '（服务器可能离线）';
+                document.getElementById('statusAlert').className = 'alert alert-error';
             }
-            document.getElementById('limitEnabled').checked = config.limitEnabled;
-            document.getElementById('freeQueries').value = config.freeQueries;
-            document.getElementById('wechatId').value = config.wechatId;
-            document.getElementById('freeCount').textContent = config.freeQueries;
-            
-            document.getElementById('siteTitle').value = config.siteTitle || '伺服电缆选型工具';
-            document.getElementById('siteSubtitle').value = config.siteSubtitle || '';
-            document.getElementById('modalTitle').value = config.modalTitle || '';
-            document.getElementById('modalText').value = config.modalText || '';
-            document.getElementById('unlockSuccess').value = config.unlockSuccess || '';
-            document.getElementById('tipsText').value = config.tipsText || '';
-            
-            updateAlert();
-            renderCodes();
         }
 
-        function saveConfig() {
-            config.limitEnabled = document.getElementById('limitEnabled').checked;
-            config.freeQueries = parseInt(document.getElementById('freeQueries').value) || 1;
-            config.wechatId = document.getElementById('wechatId').value || 'zzh250058';
-            
-            config.siteTitle = document.getElementById('siteTitle').value;
-            config.siteSubtitle = document.getElementById('siteSubtitle').value;
-            config.modalTitle = document.getElementById('modalTitle').value;
-            config.modalText = document.getElementById('modalText').value;
-            config.unlockSuccess = document.getElementById('unlockSuccess').value;
-            config.tipsText = document.getElementById('tipsText').value;
-            
-            document.getElementById('freeCount').textContent = config.freeQueries;
-            localStorage.setItem('servo_admin_config', JSON.stringify(config));
-            localStorage.setItem('servo_config', JSON.stringify(config));
-            updateAlert();
-            syncToFrontend();
-        }
-
-        function updateAlert() {
+        function updateStatusAlert() {
             const alert = document.getElementById('statusAlert');
-            if (config.limitEnabled) {
+            const enabled = document.getElementById('limitEnabled').checked;
+            const free = document.getElementById('freeQueries').value;
+            if (enabled) {
                 alert.className = 'alert alert-warning';
-                alert.innerHTML = '⚠️ 查询限制已启用，用户只能免费查询 <strong>' + config.freeQueries + '</strong> 次';
+                alert.innerHTML = '⚠️ 查询限制已启用，用户只能免费查询 <strong>' + free + '</strong> 次';
             } else {
                 alert.className = 'alert alert-success';
                 alert.innerHTML = '✅ 查询限制已关闭，所有用户可无限查询';
             }
         }
 
-        function addCode() {
+        function setSaveStatus(state) {
+            let el = document.getElementById('saveStatusEl');
+            if (!el) {
+                el = document.createElement('span');
+                el.id = 'saveStatusEl';
+                el.className = 'saving-indicator';
+                document.querySelector('.container > .header .subtitle').appendChild(el);
+            }
+            el.className = 'saving-indicator ' + state;
+            el.textContent = state === 'saving' ? '保存中...' : state === 'saved' ? '✓ 已保存' : '';
+            if (state === 'saved') {
+                clearTimeout(el._timer);
+                el._timer = setTimeout(() => { el.textContent = ''; }, 2000);
+            }
+        }
+
+        async function saveAll() {
+            if (!adminPassword) { showToast('请先输入密码登录', 'error'); return; }
+            updateStatusAlert();
+
+            const data = {
+                password: adminPassword,
+                limitEnabled: document.getElementById('limitEnabled').checked,
+                freeQueries: parseInt(document.getElementById('freeQueries').value) || 1,
+                wechatId: document.getElementById('wechatId').value || 'zzh250058',
+                siteTitle: document.getElementById('siteTitle').value,
+                siteSubtitle: document.getElementById('siteSubtitle').value,
+                modalTitle: document.getElementById('modalTitle').value,
+                modalText: document.getElementById('modalText').value,
+                unlockSuccess: document.getElementById('unlockSuccess').value,
+                tipsText: document.getElementById('tipsText').value
+            };
+
+            setSaveStatus('saving');
+            try {
+                const resp = await fetch(API + '/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (resp.status === 403) { showToast('密码错误，请重新登录', 'error'); return; }
+                if (!resp.ok) throw new Error('保存失败');
+                setSaveStatus('saved');
+                showToast('✓ 配置已保存到服务器', 'success');
+            } catch (e) {
+                setSaveStatus('');
+                showToast('保存失败：' + e.message, 'error');
+            }
+        }
+
+        async function addCode() {
+            if (!adminPassword) { showToast('请先输入密码', 'error'); return; }
             const input = document.getElementById('newCode');
             const code = input.value.trim().toUpperCase();
             if (!code) return;
-            if (config.unlockCodes.includes(code)) {
-                alert('该解锁码已存在');
+
+            const codes = currentConfig.unlockCodes || [];
+            if (codes.includes(code)) {
+                showToast('该解锁码已存在', 'error');
                 return;
             }
-            config.unlockCodes.push(code);
-            saveConfig();
-            renderCodes();
-            input.value = '';
+
+            const newCodes = [...codes, code];
+            setSaveStatus('saving');
+            try {
+                const resp = await fetch(API + '/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: adminPassword, unlockCodes: newCodes })
+                });
+                if (resp.status === 403) { showToast('密码错误', 'error'); return; }
+                if (!resp.ok) throw new Error('保存失败');
+                currentConfig.unlockCodes = newCodes;
+                renderCodes();
+                setSaveStatus('saved');
+                showToast('✓ 解锁码已添加', 'success');
+                input.value = '';
+            } catch (e) {
+                setSaveStatus('');
+                showToast('添加失败：' + e.message, 'error');
+            }
         }
 
-        function removeCode(code) {
-            config.unlockCodes = config.unlockCodes.filter(c => c !== code);
-            saveConfig();
-            renderCodes();
+        async function removeCode(code) {
+            if (!adminPassword) { showToast('请先输入密码', 'error'); return; }
+            const codes = (currentConfig.unlockCodes || []).filter(c => c !== code);
+            setSaveStatus('saving');
+            try {
+                const resp = await fetch(API + '/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: adminPassword, unlockCodes: codes })
+                });
+                if (resp.status === 403) { showToast('密码错误', 'error'); return; }
+                if (!resp.ok) throw new Error('保存失败');
+                currentConfig.unlockCodes = codes;
+                renderCodes();
+                setSaveStatus('saved');
+                showToast('✓ 解锁码已删除', 'success');
+            } catch (e) {
+                setSaveStatus('');
+                showToast('删除失败：' + e.message, 'error');
+            }
         }
 
         function renderCodes() {
             const list = document.getElementById('codeList');
-            if (config.unlockCodes.length === 0) {
+            const codes = currentConfig.unlockCodes || [];
+            if (codes.length === 0) {
                 list.innerHTML = '<div style="color:#6b7b9c;text-align:center;padding:12px;">暂无解锁码</div>';
                 return;
             }
-            list.innerHTML = config.unlockCodes.map(code => `
+            list.innerHTML = codes.map(code => `
                 <div class="code-item">
                     <span class="code-text">${code}</span>
                     <button class="btn btn-sm btn-danger" onclick="removeCode('${code}')">删除</button>
@@ -418,54 +437,95 @@
             `).join('');
         }
 
-        function changePassword() {
+        async function changePassword() {
             const oldPwd = document.getElementById('oldPassword').value;
             const newPwd = document.getElementById('newPassword').value;
             const confirmPwd = document.getElementById('confirmPassword').value;
-            
-            const savedPassword = localStorage.getItem('servo_admin_password') || DEFAULT_PASSWORD;
-            
-            if (oldPwd !== savedPassword) {
-                alert('当前密码错误');
-                return;
+
+            if (!oldPwd) { showToast('请输入当前密码', 'error'); return; }
+            if (!newPwd) { showToast('请输入新密码', 'error'); return; }
+            if (newPwd !== confirmPwd) { showToast('两次输入的密码不一致', 'error'); return; }
+            if (newPwd.length < 4) { showToast('密码至少4位', 'error'); return; }
+
+            try {
+                const resp = await fetch(API + '/admin/password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ oldPassword: oldPwd, newPassword: newPwd })
+                });
+                const result = await resp.json();
+                if (resp.status === 403) { showToast('当前密码错误', 'error'); return; }
+                if (!resp.ok) { showToast(result.error || '修改失败', 'error'); return; }
+                adminPassword = newPwd;
+                document.getElementById('oldPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                showToast('✓ 密码修改成功！', 'success');
+            } catch (e) {
+                showToast('修改失败：' + e.message, 'error');
             }
-            if (!newPwd) {
-                alert('请输入新密码');
-                return;
-            }
-            if (newPwd !== confirmPwd) {
-                alert('两次输入的新密码不一致');
-                return;
-            }
-            if (newPwd.length < 4) {
-                alert('密码至少4位');
-                return;
-            }
-            
-            localStorage.setItem('servo_admin_password', newPwd);
-            alert('密码修改成功！请记住新密码：' + newPwd);
-            
-            document.getElementById('oldPassword').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
         }
 
-        function syncToFrontend() {
-            localStorage.setItem('servo_config', JSON.stringify({
-                limitEnabled: config.limitEnabled,
-                freeQueries: config.freeQueries,
-                wechatId: config.wechatId,
-                unlockCodes: config.unlockCodes,
-                siteTitle: config.siteTitle,
-                siteSubtitle: config.siteSubtitle,
-                modalTitle: config.modalTitle,
-                modalText: config.modalText,
-                unlockSuccess: config.unlockSuccess,
-                tipsText: config.tipsText
-            }));
+        // ===== 登录流程 =====
+        async function doLogin(password) {
+            try {
+                const resp = await fetch(API + '/admin/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                const result = await resp.json();
+                if (result.valid) {
+                    adminPassword = password;
+                    sessionStorage.setItem('servo_admin_session', 'true');
+                    document.getElementById('loginOverlay') && document.getElementById('loginOverlay').remove();
+                    loadConfig();
+                } else {
+                    const errEl = document.getElementById('loginError');
+                    errEl.style.display = 'block';
+                    setTimeout(() => { errEl.style.display = 'none'; }, 3000);
+                }
+            } catch (e) {
+                const errEl = document.getElementById('loginError');
+                if (errEl) {
+                    errEl.textContent = '服务器连接失败：' + e.message;
+                    errEl.style.display = 'block';
+                }
+            }
         }
 
-        loadConfig();
+        // 检查是否已登录（通过 sessionStorage）
+        if (sessionStorage.getItem('servo_admin_session') !== 'true') {
+            // 显示登录界面
+            document.body.innerHTML = `
+                <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;">
+                    <div style="width:100%;max-width:360px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px 32px;text-align:center;">
+                        <div style="width:64px;height:64px;background:rgba(0,212,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px;">🔐</div>
+                        <h1 style="font-size:1.4rem;color:#00d4ff;margin-bottom:8px;">后台管理登录</h1>
+                        <p style="color:#6b7b9c;font-size:0.85rem;margin-bottom:30px;">请输入管理密码</p>
+                        <div style="margin-bottom:20px;text-align:left;">
+                            <label style="display:block;color:#8b9dc3;font-size:0.85rem;margin-bottom:8px;">管理密码</label>
+                            <input type="password" id="loginPwd" placeholder="请输入密码" style="width:100%;padding:12px 16px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:1rem;outline:none;" onkeypress="if(event.key==='Enter')doLogin(document.getElementById('loginPwd').value)">
+                        </div>
+                        <button onclick="doLogin(document.getElementById('loginPwd').value)" style="width:100%;padding:12px;background:linear-gradient(135deg, #00d4ff 0%, #7b61ff 100%);border:none;border-radius:8px;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;">登录</button>
+                        <div id="loginError" style="color:#ff6b6b;font-size:0.85rem;margin-top:12px;display:none;">密码错误，请重试</div>
+                        <div style="margin-top:24px;">
+                            <a href="/servo-cable/" style="color:#6b7b9c;font-size:0.85rem;text-decoration:none;">← 返回首页</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            // 已登录，直接加载
+            adminPassword = sessionStorage.getItem('servo_admin_session_pwd') || 'kzy2024';
+            loadConfig();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('servo_admin_session');
+            sessionStorage.removeItem('servo_admin_session_pwd');
+            window.location.reload();
+        }
     </script>
 </body>
 </html>
